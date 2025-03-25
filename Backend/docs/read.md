@@ -39,4 +39,13 @@ This endpoint registers a new user by accepting a JSON payload with user details
     "email": "john.doe@example.com"
   }
 }
+
 ```
+# API Documentation
+
+## User Endpoints
+
+### Login User
+- **Endpoint:** POST /user/login
+- **Description:** Validates email and password before authentication.
+- **Controller:** loginUser
