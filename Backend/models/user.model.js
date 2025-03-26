@@ -47,7 +47,7 @@ userSchema.methods.comparePassword = async function (password) {
 // ✅ 3️⃣ Generate JWT Token
 userSchema.methods.generateAuthToken = function () {
   try {
-    return jwt.sign({ _id: this._id }, process.env.JWT_SECRET);
+    return jwt.sign({ _id: this._id }, process.env.JWT_SECRET,{expiresIn: '24h'});
   } catch (error) {
     console.error("Error generating auth token:", error);
     return null;

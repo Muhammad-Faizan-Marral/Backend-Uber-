@@ -49,3 +49,13 @@ This endpoint registers a new user by accepting a JSON payload with user details
 - **Endpoint:** POST /user/login
 - **Description:** Validates email and password before authentication.
 - **Controller:** loginUser
+
+### Profile User
+- **Endpoint:** GET /user/profile
+- **Description:** Retrieves the profile information of the authenticated user.
+- **Access:** Private
+
+### Logout User
+- **Endpoint:** GET /user/logout
+- **Description:** Logs out the user by clearing the token and invalidating the session.
+- **Access:** Private
