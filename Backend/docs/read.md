@@ -59,3 +59,61 @@ This endpoint registers a new user by accepting a JSON payload with user details
 - **Endpoint:** GET /user/logout
 - **Description:** Logs out the user by clearing the token and invalidating the session.
 - **Access:** Private
+
+## Captain Endpoints
+
+### Register Captain
+- **Endpoint:** POST /captain/register
+- **Description:** Registers a new captain by accepting details and vehicle information, then returns a JWT token upon successful registration.
+- **Request Data:**
+  - **fullname**: Object
+    - **firstname** (required, min 3 characters)
+    - **lastname** (optional, min 3 characters)
+  - **email** (required): Valid email string
+  - **password** (required): String (min 6 characters)
+  - **vehicle**: Object
+    - **color**: String (min 3 characters)
+    - **plate**: String (min 3 characters)
+    - **capacity**: Number (min 1)
+    - **vehicleType**: String (car, motorcycle, or auto-rickshaw)
+- **Example Request:**
+```json
+{
+  "fullname": {
+    "firstname": "Alice",
+    "lastname": "Smith"
+  },
+  "email": "alice.smith@example.com",
+  "password": "strongPassword",
+  "vehicle": {
+    "color": "Blue",
+    "plate": "XYZ123",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+- **Responses:**
+  - **201 Created**: Registration successful; returns a JWT token and captain details.
+  - **Example Response:**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "captain": {
+    "id": "captainId123",
+    "fullname": {
+      "firstname": "Alice",
+      "lastname": "Smith"
+    },
+    "email": "alice.smith@example.com",
+    "vehicle": {
+      "color": "Blue",
+      "plate": "XYZ123",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+  }
+}
+```
+  - **400 Bad Request**: Validation error or missing fields.
+  - **500 Internal Server Error**: In case of a server-side error.
