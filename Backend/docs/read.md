@@ -1,16 +1,17 @@
-# /user/register Endpoint Documentation
+# API Documentation
 
-## Description
-This endpoint registers a new user by accepting a JSON payload with user details and returns a JWT token upon successful registration.
+## User Endpoints
 
-## Request Data
-- **fullname**: Object
-  - **firstname** (required): String (minimum 3 characters)
-  - **lastname** (optional): String (if provided, minimum 3 characters)
-- **email** (required): Valid email string (minimum 5 characters)
-- **password** (required): String (minimum 6 characters)
-
-### Example Request
+### Register User
+- **Endpoint:** POST /user/register
+- **Description:** Registers a new user by accepting a JSON payload with user details and returns a JWT token upon successful registration.
+- **Request Data:**
+  - **fullname**: Object
+    - **firstname** (required): String (minimum 3 characters)
+    - **lastname** (optional): String (if provided, minimum 3 characters)
+  - **email** (required): Valid email string (minimum 5 characters)
+  - **password** (required): String (minimum 6 characters)
+- **Example Request:**
 ```json
 {
   "fullname": {
@@ -21,15 +22,14 @@ This endpoint registers a new user by accepting a JSON payload with user details
   "password": "securePass123"
 }
 ```
-
-## Responses
-- **201 Created**: Registration successful. Returns a JSON with a JWT token and the user details.
-- **400 Bad Request**: Validation error, missing fields, or invalid data.
-- **500 Internal Server Error**: In case of a server-side error.
-### Example Response
+- **Responses:**
+  - **201 Created**: Registration successful. Returns a JSON with a JWT token and the user details.
+  - **400 Bad Request**: Validation error, missing fields, or invalid data.
+  - **500 Internal Server Error**: In case of a server-side error.
+- **Example Response:**
 ```json
 {
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMzQ1NiIsImV4cCI6MTYwOTIzOTIwMH0.abc123def456ghi789",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "user": {
     "id": "123456",
     "fullname": {
@@ -39,26 +39,37 @@ This endpoint registers a new user by accepting a JSON payload with user details
     "email": "john.doe@example.com"
   }
 }
-
 ```
-# API Documentation
-
-## User Endpoints
 
 ### Login User
 - **Endpoint:** POST /user/login
 - **Description:** Validates email and password before authentication.
-- **Controller:** loginUser
+- **Request Data:**
+  - **email** (required): Valid email string
+  - **password** (required): String (minimum 6 characters)
+- **Responses:**
+  - **200 OK**: Login successful. Returns a JWT token and user details.
+  - **401 Unauthorized**: Invalid credentials.
+  - **400 Bad Request**: Validation error.
+  - **500 Internal Server Error**: In case of a server-side error.
 
 ### Profile User
 - **Endpoint:** GET /user/profile
 - **Description:** Retrieves the profile information of the authenticated user.
 - **Access:** Private
+- **Responses:**
+  - **200 OK**: Returns user profile details.
+  - **401 Unauthorized**: If the user is not authenticated.
 
 ### Logout User
 - **Endpoint:** GET /user/logout
 - **Description:** Logs out the user by clearing the token and invalidating the session.
 - **Access:** Private
+- **Responses:**
+  - **200 OK**: Logout successful.
+  - **401 Unauthorized**: If the user is not authenticated.
+
+---
 
 ## Captain Endpoints
 
@@ -117,3 +128,31 @@ This endpoint registers a new user by accepting a JSON payload with user details
 ```
   - **400 Bad Request**: Validation error or missing fields.
   - **500 Internal Server Error**: In case of a server-side error.
+
+### Login Captain
+- **Endpoint:** POST /captain/login
+- **Description:** Authenticates a captain by validating email and password.
+- **Request Data:**
+  - **email** (required): Valid email string
+  - **password** (required): String (minimum 6 characters)
+- **Responses:**
+  - **200 OK**: Login successful. Returns a JWT token and captain details.
+  - **401 Unauthorized**: Invalid credentials.
+  - **400 Bad Request**: Validation error.
+  - **500 Internal Server Error**: In case of a server-side error.
+
+### Profile Captain
+- **Endpoint:** GET /captain/profile
+- **Description:** Retrieves the profile information of the authenticated captain.
+- **Access:** Private
+- **Responses:**
+  - **200 OK**: Returns captain profile details.
+  - **401 Unauthorized**: If the captain is not authenticated.
+
+### Logout Captain
+- **Endpoint:** GET /captain/logout
+- **Description:** Logs out the captain by clearing the token and invalidating the session.
+- **Access:** Private
+- **Responses:**
+  - **200 OK**: Logout successful.
+  - **401 Unauthorized**: If the captain is not authenticated.

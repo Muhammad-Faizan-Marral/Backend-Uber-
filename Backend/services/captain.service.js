@@ -1,7 +1,8 @@
-const Captain = require("../models/captain.model");
+// captain.service.js
+const captainModel = require("../models/captain.model");
+const BlacklistToken = require("../models/blacklistToken.model");
 
 module.exports.createCaptain = async ({ firstname, lastname, email, password, vehicle }) => {
-  // Ensure all fields exist (this check is optional if already done in controller)
   if (
     !firstname ||
     !email ||
@@ -16,7 +17,7 @@ module.exports.createCaptain = async ({ firstname, lastname, email, password, ve
   }
 
   // Create new captain using the already hashed password
-  const captain = await Captain.create({
+  const captain = await captainModel.create({
     fullname: { firstname, lastname },
     email,
     password, // Already hashed
@@ -24,4 +25,9 @@ module.exports.createCaptain = async ({ firstname, lastname, email, password, ve
   });
 
   return captain;
+};
+
+module.exports.blacklistToken = async (token) => {
+  // Create a new blacklist token entry in the database.
+  return await BlacklistToken.create({ token });
 };
