@@ -1,37 +1,141 @@
-import React from "react";
-import { FaArrowRight } from "react-icons/fa";
-import {Link} from 'react-router-dom';
-const Home = () => {
-  return (
-    <div className="relative h-screen w-full">
-      <div
-        className="absolute -top-20 bottom-12 inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1517676109075-9a94d44145d1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Y2FyJTIwZHJpdmluZyUyMGltZyUyMHViZXJyfGVufDB8fDB8fHww')",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-        }}
-      ></div>
+"use client";
+import React, { useState } from "react";
+import { IoIosArrowDown } from "react-icons/io";
+import LocationSerachPannel from "../Components/LocationSerachPannel";
+import VahiclePannel from "../Components/VahiclePannel";
+import ConfirmedRide from "../Components/ConfirmedRide";
+import WaitingForDriver from "../Components/WaitingForDriver";
+import LookingForDriver from "../Components/LookingForDriver";
 
-      <div className="relative z-10 flex flex-col justify-between h-screen w-full">
+const Home = () => {
+  const [isFocused, setIsFocused] = useState(false);
+  const [pickup, setPickup] = useState("");
+  const [destination, setDestination] = useState("");
+  const [VehiclePannel, setVehiclePannel] = useState(false);
+  const [ConfirmRide, setConfirmRide] = useState(false);
+  const [Driver, setDriver] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Pickup Location:", pickup);
+    console.log("Destination:", destination);
+  };
+
+  return (
+    <div className="h-screen relative">
+      {/* Main - Background*/}
+
+      <div className="h-screen w-screen flex items-center justify-center">
         <img
-          className="w-36 h-auto m-4 relative z-20 drop-shadow-lg"
-          src="https://pngimg.com/uploads/uber/uber_PNG16.png"
-          alt="Uber Logo"
+          src="https://miro.medium.com/v2/resize:fit:1200/1*pDuy0gLCj1dgGxUCsG-KUQ.png"
+          alt="Uber_Img"
+          className="h-full w-full object-cover"
+        />
+      </div>
+      <div
+        className={`absolute w-full bottom-0 bg-white p-6 flex gap-7 flex-col shadow-xl transition-all duration-500 ease-in-out ${
+          isFocused ? "top-0" : "bottom-0"
+        }`}
+      >
+        <h2
+          className={`font-bold text-2xl leading-5 tracking-wider text-gray-800 transition-opacity duration-300 ${
+            isFocused ? "hidden" : "block"
+          }`}
+        >
+          Find a trip
+        </h2>
+
+        <IoIosArrowDown
+          className={`text-4xl ${isFocused ? "block rotate-180" : "hidden"}`}
+          onClick={() => {
+            setIsFocused(false);
+            setVehiclePannel(false);
+            setConfirmRide(false);
+            setDriver(false);
+          }}
         />
 
-        <div className="bg-white py-6 px-5 flex flex-col items-center">
-          <h2 className="text-2xl -ml-20 font-medium font-uber text-black">
-            Get Started With Uber
-          </h2>
-          <Link to={"/login"} className="w-full bg-black text-white p-3 rounded-md mt-3 font-uber flex items-center justify-between">
-            <span className="w-full text-center">Continue</span>
-            <FaArrowRight className="h-4 w-4 text-white" />
-          </Link>
-          <hr className="w-40 h-1 bg-black rounded-md mt-6" />
+        {/* Form */}
+        <form
+          onSubmit={handleSubmit}
+          className={`flex gap-6 flex-col ${isFocused ? "mt-0" : "block"}`}
+        >
+          <input
+            value={pickup}
+            onChange={(e) => setPickup(e.target.value)}
+            className="h-12 w-full bg-gray-100 border border-gray-300 pl-4 rounded-lg focus:ring-2 focus:ring-blue-500 transition duration-100 ease-in-out"
+            type="text"
+            placeholder="Add a Pick-up Location"
+            onFocus={() => setIsFocused(true)}
+          />
+          <input
+            value={destination}
+            onChange={(e) => setDestination(e.target.value)}
+            className="h-12 w-full bg-gray-100 border border-gray-300 pl-4 rounded-lg focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+            type="text"
+            placeholder="Enter your Destination"
+          />
+        </form>
+
+        {/*LocationSerachPannel */}
+
+        <div className={` overflow-y-auto   ${isFocused ? "block" : "hidden"}`}>
+          <LocationSerachPannel
+            VehiclePannel={VehiclePannel}
+            setVehiclePannel={setVehiclePannel}
+          />
         </div>
       </div>
+
+      {/*Vahicle - Pannel */}
+      <div
+        className={`absolute top-52 p-6 bg-slate-50 h-screen  ${
+          VehiclePannel ? "block" : "hidden"
+        }`}
+      >
+        <VahiclePannel
+          VehiclePannel={VehiclePannel}
+          setVehiclePannel={setVehiclePannel}
+          setConfirmRide={setConfirmRide}
+        />
+      </div>
+
+      {/* Confirm - Vedhicele */}
+
+      <div
+        className={`absolute top-52 p-6 bg-slate-50 h-screen w-screen ${
+          ConfirmRide ? "block" : "hidden"
+        }`}
+      >
+        <ConfirmedRide
+          ConfirmRide={ConfirmRide}
+          setConfirmRide={setConfirmRide}
+          setDriver={setDriver}
+        />
+      </div>
+
+      {/* Looking for Drivers */}
+
+      <div
+        className={`absolute top-52 p-6 bg-slate-50  h-screen w-screen  ${
+          Driver ? "block" : "hidden"
+        }`}
+      >
+        <LookingForDriver setDriver={setDriver} />
+      </div>
+
+      {/* Waiting for Drivers */}
+
+      {/* <div
+        className={`absolute top-52 p-6 bg-slate-50  h-screen w-screen`}
+      >
+        <WaitingForDriver/>
+      </div> */}
+
+
+      
+
+
     </div>
   );
 };

@@ -1,32 +1,51 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { FaUserPlus } from "react-icons/fa";
+import axios from "axios";
+import { UserContext } from "../context/UserContext";
 
 const UserSignup = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [userData, setUserData] = useState({});
-  const submitHandler = (e) => {
+
+  const navigate = useNavigate();
+  const { user, setUser } = useContext(UserContext);
+
+          // Function
+
+  const submitHandler = async (e) => {
     e.preventDefault();
-    setFirstName("");
-    setLastName("");
+
+    const newUser = {
+      fullname: { firstname, lastname },  
+      email,
+      password,
+    };
+ 
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/users/register`,
+        newUser
+      );
+
+      if (response.status === 201) {
+        const data = response.data;
+        setUser(data.user);
+        localStorage.setItem("token", data.token);
+        navigate("/home");
+
+      }
+    } catch (error) {
+      console.error("Signup failed", error);
+    }
+
+    setFirstname("");
+    setLastname("");
     setEmail("");
     setPassword("");
-
-    setUserData({
-      fullName: {
-        firstName: firstName,
-        lastName: lastName,
-      },
-
-      email: email,
-      password: password,
-    });
-    console.log(userData);
   };
-
   return (
     <div className="flex justify-center items-center h-screen bg-blue-50">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96 border-2 border-blue-400">
@@ -53,8 +72,8 @@ const UserSignup = () => {
             <input
               type="text"
               required
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              value={firstname}
+              onChange={(e) => setFirstname(e.target.value)}
               placeholder="Enter your first name"
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -68,8 +87,8 @@ const UserSignup = () => {
             <input
               type="text"
               required
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              value={lastname}
+              onChange={(e) => setLastname(e.target.value)}
               placeholder="Enter your last name"
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />

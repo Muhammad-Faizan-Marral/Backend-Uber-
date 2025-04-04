@@ -77,6 +77,7 @@
 - **Endpoint:** POST /captain/register
 - **Description:** Registers a new captain by accepting details and vehicle information, then returns a JWT token upon successful registration.
 - **Request Data:**
+
   - **fullname**: Object
     - **firstname** (required, min 3 characters)
     - **lastname** (optional, min 3 characters)
@@ -87,6 +88,7 @@
     - **plate**: String (min 3 characters)
     - **capacity**: Number (min 1)
     - **vehicleType**: String (car, motorcycle, or auto-rickshaw)
+    
 - **Example Request:**
 ```json
 {

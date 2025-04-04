@@ -1,22 +1,38 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { FaUserTie } from "react-icons/fa"; // Captain Icon
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FaUserTie } from "react-icons/fa";
+import { CaptainContext } from "../context/CaptainContext";
+import axios from "axios";
 
 const CaptainLogin = () => {
+  const navigate = useNavigate();
+  const { captain, setCaptain } = useContext(CaptainContext);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [captainData, setCaptainData] = useState({});
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
     console.log("Captain Login:", email, password);
+
     setEmail("");
     setPassword("");
-    setCaptainData({
+
+    const newCaptain = {
       email: email,
       password: password,
-    });
-    
+    };
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/captain/login`,
+      newCaptain
+    );
+
+    if (response.status === 200) {
+      const data = response.data;
+      setCaptain(data.captain);
+      localStorage.setItem("token", data.token);
+      navigate("/captain-home");
+    }
   };
 
   return (
@@ -39,7 +55,9 @@ const CaptainLogin = () => {
         <form onSubmit={submitHandler}>
           {/* Email */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
             <input
               type="email"
               required
@@ -52,7 +70,9 @@ const CaptainLogin = () => {
 
           {/* Password */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
             <input
               type="password"
               required
@@ -73,14 +93,20 @@ const CaptainLogin = () => {
         <div className="text-center mt-4">
           <p className="text-sm text-gray-600">
             New here?{" "}
-            <Link to="/captain-signup" className="text-green-700 font-semibold hover:underline">
+            <Link
+              to="/captain-signup"
+              className="text-green-700 font-semibold hover:underline"
+            >
               Create Account
             </Link>
           </p>
         </div>
 
         <div className="text-center mt-4">
-          <Link to="/login" className="text-blue-700 text-sm font-semibold hover:underline">
+          <Link
+            to="/login"
+            className="text-blue-700 text-sm font-semibold hover:underline"
+          >
             Sign in as User
           </Link>
         </div>

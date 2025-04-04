@@ -1,21 +1,39 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { FaUser } from "react-icons/fa"; // User Icon
+import React, { useState,useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FaUser } from "react-icons/fa";
+import axios from "axios";
+import { UserContext } from "../context/UserContext";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userData, setUserData] = useState({});
 
-  const submitHandler = (e) => {
+  const navigate = useNavigate();
+  const { user, setUser } = useContext(UserContext);
+
+  const submitHandler = async (e) => {
     e.preventDefault();
-    console.log("User Login:", email, password);
+
+    const newUser = {
+      email,
+      password,
+    };
+
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/users/login`,
+      newUser
+    );
+
+    if (response.status === 200) {
+      const data = response.data;
+      setUser(data.user);
+      localStorage.setItem("token", data.token)
+      navigate("/home");
+    }
+
     setEmail("");
     setPassword("");
-    setUserData({
-      email: email,
-      password: password,
-    });
   };
 
   return (
@@ -38,7 +56,9 @@ const UserLogin = () => {
         <form onSubmit={submitHandler}>
           {/* Email */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
             <input
               type="email"
               required
@@ -51,7 +71,9 @@ const UserLogin = () => {
 
           {/* Password */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
             <input
               type="password"
               required
@@ -72,14 +94,20 @@ const UserLogin = () => {
         <div className="text-center mt-4">
           <p className="text-sm text-gray-600">
             New here?{" "}
-            <Link to="/signup" className="text-blue-700 font-semibold hover:underline">
+            <Link
+              to="/signup"
+              className="text-blue-700 font-semibold hover:underline"
+            >
               Create Account
             </Link>
           </p>
         </div>
 
         <div className="text-center mt-4">
-          <Link to="/captain-login" className="text-green-700 text-sm font-semibold hover:underline">
+          <Link
+            to="/captain-login"
+            className="text-green-700 text-sm font-semibold hover:underline"
+          >
             Sign in as Captain
           </Link>
         </div>
